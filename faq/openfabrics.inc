@@ -2343,6 +2343,52 @@ shell$ mpirun --mca pml ucx --mca osc ucx --mca scoll ucx --mca atomic ucx ...
 
 /////////////////////////////////////////////////////////////////////////
 
+$q[] = "I'm getting errors about \"initializing an OpenFabrics device\" when running
+4.0.0 with UCX support enabled.  What should I do?";
+$anchor[] = "ofa-device-error";
+$a[] = "Disable ib verbs support (--without-verbs).
+
+The messages below were observed by at least one site where OpenMPI 4.0.0
+was built with support for InfiniBand verbs (--with-verbs), OFA UCX (--with-ucx), 
+and CUDA (--with-cuda) with applications running on gpu-enabled hosts.
+
+Since the openib BTL (configured via --with-verbs) is deprecated in favor
+of UCX and the UCX PML includes support for the OpenFabrics devices in question 
+(Mellanox HCAs), the openib BTL is not needed.
+
+<pre>
+WARNING: There was an error initializing an OpenFabrics device.
+
+                Local host: c36a-s39
+                Local device: mlx4_0
+</pre>
+
+and
+
+<pre>
+-----------------------------------------------------------------------------
+By default, for Open MPI 4.0 and later, infiniband ports on a device
+are not used by default.  The intent is to use UCX for these devices.
+You can override this policy by setting the btl_openib_allow_ib MCA parameter
+to true.
+
+                    Local host:              c36a-s39
+                    Local adapter:           mlx4_0
+                    Local port:              1
+-----------------------------------------------------------------------------
+</pre>";
+/////////////////////////////////////////////////////////////////////////
+
+$q[] = "How can I find out what devices and transports are supported by UCX on my system?";
+$anchor[] = "ucx-supported-devices";
+$a[] = "The <code>ucx_info</code> command can be used.
+
+For example,
+<pre>
+shell$ ucx_info -d
+</pre>";
+/////////////////////////////////////////////////////////////////////////
+
 $q[] = "What is <code>cpu-set</code>?";
 $anchor[] = "cpu-set";
 $a[] = "
